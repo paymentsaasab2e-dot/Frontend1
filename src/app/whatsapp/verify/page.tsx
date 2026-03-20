@@ -16,16 +16,18 @@ export default function VerifyOTP() {
   const [error, setError] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [countryCode, setCountryCode] = useState("");
+  const [otpEmail, setOtpEmail] = useState("");
 
   useEffect(() => {
     // Get WhatsApp number from sessionStorage
     const storedNumber = sessionStorage.getItem("whatsappNumber");
     const storedCountryCode = sessionStorage.getItem("countryCode");
-    const storedFullNumber = sessionStorage.getItem("fullWhatsAppNumber");
+    const storedEmail = sessionStorage.getItem("otpEmail");
 
-    if (storedNumber && storedCountryCode) {
+    if (storedNumber && storedCountryCode && storedEmail) {
       setWhatsappNumber(storedNumber);
       setCountryCode(storedCountryCode);
+      setOtpEmail(storedEmail);
     } else {
       // If no stored data, redirect back to WhatsApp page
       router.push("/whatsapp");
@@ -54,7 +56,7 @@ export default function VerifyOTP() {
     setTimer(29);
     setIsResendDisabled(true);
 
-    if (!whatsappNumber || !countryCode) {
+    if (!whatsappNumber || !countryCode || !otpEmail) {
       setError("Missing WhatsApp number. Please go back and enter your number again.");
       return;
     }
@@ -68,6 +70,7 @@ export default function VerifyOTP() {
         body: JSON.stringify({
           whatsappNumber: whatsappNumber,
           countryCode: countryCode,
+          email: otpEmail,
         }),
       });
 
@@ -130,6 +133,7 @@ export default function VerifyOTP() {
       sessionStorage.removeItem("whatsappNumber");
       sessionStorage.removeItem("countryCode");
       sessionStorage.removeItem("fullWhatsAppNumber");
+      sessionStorage.removeItem("otpEmail");
 
       // Returning users (number already in DB / onboarded before): go straight to dashboard — no CV step
       const skipCv = data.data.skipCvUpload === true;
@@ -209,7 +213,7 @@ export default function VerifyOTP() {
               >
                 We have sent a 6-digit verification code to your email address
                 <br />
-                <span style={{ fontSize: "10px", color: "#239CD2" }}>ghodehimanshu453@gmail.com</span>
+                <span style={{ fontSize: "10px", color: "#239CD2" }}>{otpEmail || "your Gmail"}</span>
               </p>
             </div>
 
@@ -342,7 +346,7 @@ export default function VerifyOTP() {
                 marginTop: "33px",
               }}
             >
-              Check your email (ghodehimanshu453@gmail.com) for the verification code.
+              Check your email ({otpEmail || "your Gmail"}) for the verification code.
               <br />
               This verification helps us protect your account and enable job alerts.
             </p>

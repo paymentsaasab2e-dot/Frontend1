@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { API_BASE_URL } from '@/lib/api-base';
 
 const countries = [
   { code: "IN", dialCode: "+91", name: "India", flag: "🇮🇳" },

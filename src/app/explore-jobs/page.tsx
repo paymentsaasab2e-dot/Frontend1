@@ -8,7 +8,7 @@ import ApplicationSuccessModal from '../../components/modals/ApplicationSuccessM
 import DashboardContainer from '../../components/layout/DashboardContainer';
 
 // Use backend1 directly (it shares the same MongoDB as backendphase2).
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { API_BASE_URL } from '@/lib/api-base';
 const PAGE_BG =
   'linear-gradient(135deg, #e0f2fe 0%, #ecf7fd 12%, #fafbfb 30%, #fdf6f0 55%, #fef5ed 85%, #fef5ed 100%)';
 

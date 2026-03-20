@@ -28,6 +28,7 @@ import CareerPreferencesModal, { CareerPreferencesData } from '../../components/
 import VisaWorkAuthorizationModal, { VisaWorkAuthorizationData } from '../../components/modals/VisaWorkAuthorizationModal';
 import VaccinationModal, { VaccinationData } from '../../components/modals/VaccinationModal';
 import ResumeModal, { ResumeData as BaseResumeData } from '../../components/modals/ResumeModal';
+import { API_BASE_URL } from '@/lib/api-base';
 
 // Extended ResumeData interface for profile page
 interface ResumeData extends BaseResumeData {
@@ -151,7 +152,6 @@ export default function ProfilePage() {
   const [isPortfolioLinksCardExpanded, setIsPortfolioLinksCardExpanded] = useState<boolean>(false);
 
   // API base URL
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
   const isPersistedId = (value?: string) => Boolean(value && /^[a-f\d]{24}$/i.test(value));
 

@@ -8,6 +8,10 @@ const HOSTED_API_ORIGIN = 'http://bdmsvisfyzyyr2qdfzvdy9om.187.124.169.162.sslip
 const normalizeToApiBaseUrl = (value: string): string => {
   const trimmed = value.trim();
   if (!trimmed) return '';
+  // Support relative API paths like "/api/proxy"
+  if (trimmed.startsWith('/')) {
+    return trimmed.replace(/\/$/, '');
+  }
   // If it already contains /api, use it (ensure trailing /api)
   if (trimmed.includes('/api')) {
     return trimmed.replace(/\/api\/?$/, '') + '/api';
@@ -24,7 +28,8 @@ export const API_BASE_URL = (() => {
 
   // Vercel sets NEXT_PUBLIC_VERCEL_URL during build
   if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-    return `${HOSTED_API_ORIGIN}/api`;
+    // Use same-origin proxy in production to avoid browser mixed-content/CORS issues.
+    return `/api/proxy`;
   }
 
   return `${LOCAL_API_ORIGIN}/api`;

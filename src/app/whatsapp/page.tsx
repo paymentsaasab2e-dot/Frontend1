@@ -116,6 +116,9 @@ export default function WhatsAppLogin() {
       // In development, show OTP on screen
       if (data.data.otp) {
         setOtpDisplay(data.data.otp);
+        sessionStorage.setItem("otpPreview", data.data.otp);
+      } else {
+        sessionStorage.removeItem("otpPreview");
       }
 
       // Navigate to verify page

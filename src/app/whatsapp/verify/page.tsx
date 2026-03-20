@@ -17,17 +17,20 @@ export default function VerifyOTP() {
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [otpEmail, setOtpEmail] = useState("");
+  const [otpPreview, setOtpPreview] = useState("");
 
   useEffect(() => {
     // Get WhatsApp number from sessionStorage
     const storedNumber = sessionStorage.getItem("whatsappNumber");
     const storedCountryCode = sessionStorage.getItem("countryCode");
     const storedEmail = sessionStorage.getItem("otpEmail");
+    const storedOtpPreview = sessionStorage.getItem("otpPreview");
 
     if (storedNumber && storedCountryCode && storedEmail) {
       setWhatsappNumber(storedNumber);
       setCountryCode(storedCountryCode);
       setOtpEmail(storedEmail);
+      setOtpPreview(storedOtpPreview || "");
     } else {
       // If no stored data, redirect back to WhatsApp page
       router.push("/whatsapp");
@@ -80,9 +83,10 @@ export default function VerifyOTP() {
         throw new Error(data.message || "Failed to resend OTP");
       }
 
-      // In development, show OTP on screen
+      // Show OTP on screen when backend sends fallback/testing OTP
       if (data.data.otp) {
-        alert(`Development Mode - New OTP: ${data.data.otp}`);
+        setOtpPreview(data.data.otp);
+        sessionStorage.setItem("otpPreview", data.data.otp);
       }
     } catch (err: any) {
       setError(err.message || "Failed to resend OTP. Please try again.");
@@ -134,6 +138,7 @@ export default function VerifyOTP() {
       sessionStorage.removeItem("countryCode");
       sessionStorage.removeItem("fullWhatsAppNumber");
       sessionStorage.removeItem("otpEmail");
+      sessionStorage.removeItem("otpPreview");
 
       // Returning users (number already in DB / onboarded before): go straight to dashboard — no CV step
       const skipCv = data.data.skipCvUpload === true;
@@ -238,6 +243,16 @@ export default function VerifyOTP() {
             {error && (
               <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3">
                 <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
+            {otpPreview && (
+              <div className="mb-4 rounded-md bg-amber-50 border border-amber-200 p-3">
+                <p className="text-xs text-amber-700 font-semibold mb-1">Fallback OTP</p>
+                <p className="text-lg text-amber-900 font-mono font-bold">{otpPreview}</p>
+                <p className="text-xs text-amber-700 mt-1">
+                  Email delivery failed; use this OTP to continue verification.
+                </p>
               </div>
             )}
 
